@@ -1,0 +1,249 @@
+/* =========================
+   VARIABILI (tuning rapido)
+   ========================= */
+:root {
+  /* Quanto alta può diventare la sezione hero (limite max), senza “zoommare” l’immagine */
+  --hero-max-height: 90vh;
+
+  /* Scuritura leggera dell’immagine per migliorare la leggibilità (0 = nulla, 1 = nero pieno) */
+  --darken-strength: 0.55;
+
+  /* Intensità del blur (px) e dove inizia/finisce la dissolvenza */
+  --blur-amount: 18px;
+  --blur-start: 45%;   /* da qui inizia ad apparire il blur */
+  --blur-end: 100%;    /* al fondo è massimo */
+
+  /* Colore di sfondo pagina */
+  --page-bg: #0b0f17;
+}
+
+/* =========================
+   RESET & BASE THEME
+   ========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  background: var(--page-bg);
+  color: #e8eefc;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* =========================
+   LAYOUT UTILI
+   ========================= */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* =========================
+   LOGO HOME
+   ========================= */
+.logoWrap { display: flex; justify-content: center; margin: 20px 0 30px; }
+.logo { max-width: 320px; margin-top: 40px; }
+
+/* =========================
+   GRID HOMEPAGE
+   ========================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+  justify-items: center;
+}
+.card {
+  display: block;
+  color: inherit;
+  background: #121a2a;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.card:hover { transform: translateY(-2px) scale(1.02); border-color: #F1C232; }
+.thumb img { width: 100%; display: block; object-fit: cover; aspect-ratio: 2/3; }
+.cardTitle { padding: 10px; text-align: center; font-weight: 600; font-size: .95rem; }
+
+/* responsive grid */
+@media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* =========================
+   PAGINA DETTAGLIO + HERO
+   ========================= */
+.detailPage {
+  position: relative;
+  min-height: 100vh;
+  color: #fff;
+  background: var(--page-bg);
+}
+
+/* HERO: immagine intera, nessun crop, tocca i bordi sx/dx, altezza auto (limitata da --hero-max-height) */
+.bgWrap {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  background: var(--page-bg);
+  overflow: hidden; /* nasconde eventuali artifact di blur oltre il fondo */
+}
+.detailPage .container { margin-top: -80vh; }
+
+/* l'immagine detta l'altezza della sezione: è intera, non zoomata */
+.bgImgFull {
+  display: block;
+  width: 100%;
+  height: auto;             /* mantiene il rapporto originale */
+  max-height: var(--hero-max-height);
+  object-fit: contain;      /* nessun crop */
+  object-position: top center;
+  margin: 0 auto;
+}
+
+/* velo scuro uniforme leggero per leggibilità */
+.bgDarken {
+  pointer-events: none;
+  position: absolute; inset: 0;
+  background: rgba(0,0,0, var(--darken-strength));
+  z-index: 1;
+}
+
+/* blur progressivo verso il basso, dolce e senza stacchi */
+.bgBlurFade {
+  pointer-events: none;
+  position: absolute; inset: 0;
+  z-index: 2;
+
+  /* il blur agisce su ciò che sta dietro (l'immagine) */
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+
+  /* il blur cresce lungo l'asse verticale: trasparente in alto, pieno in basso */
+  /* usiamo un gradiente di opacità per mascherare il backdrop-filter */
+  /* Nota: per compat Safari/WebKit manteniamo anche -webkit-mask-image */
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) var(--blur-start),
+    rgba(255,255,255,0.6) calc((var(--blur-start) + var(--blur-end)) / 2),
+    rgba(255,255,255,1) var(--blur-end)
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) var(--blur-start),
+    rgba(255,255,255,0.6) calc((var(--blur-start) + var(--blur-end)) / 2),
+    rgba(255,255,255,1) var(--blur-end)
+  );
+
+  /* sfuma anche al colore di pagina per eliminare ogni “stacco” */
+  background: linear-gradient(
+    to bottom,
+    rgba(11,15,23,0) 0%,
+    rgba(11,15,23,0) var(--blur-start),
+    rgba(11,15,23,0.35) calc((var(--blur-start) + var(--blur-end)) / 2 + 5%),
+    rgba(11,15,23,0.9) 100%
+  );
+}
+
+/* contenuto sopra */
+.detailPage .container { position: relative; z-index: 3; }
+
+.backLink {
+  color: inherit;
+  opacity: 0.8;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.detail {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 24px 0 40px 0;
+}
+
+.posterCol { flex: 0 0 280px; }
+.posterLarge {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+.infoCol { max-width: 600px; }
+
+.filmTitle { font-size: 2rem; margin-bottom: .25rem; }
+.meta      { font-size: .95rem; opacity: .85; margin-bottom: .75rem; }
+.tagline   { font-style: italic; font-size: 1.05rem; margin: 0 0 .75rem 0; opacity: 0.9; }
+.plot      { margin: 0 0 1.5rem 0; line-height: 1.55; font-size: 1rem; }
+
+/* =========================
+   BOTTONI
+   ========================= */
+.btnRow { display: flex; gap: 12px; align-items: center; }
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: #121a2a;
+  color: inherit;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.btn:hover { transform: translateY(-2px) scale(1.02); border-color: #F1C232; }
+.btnOutline { background: #121a2a; }
+.btnSolid   { background: #121a2a; }
+
+/* =========================
+   MODAL PLAYER
+   ========================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 999;
+}
+.modalInner {
+  width: min(1100px, 95vw);
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+.playerWrap { position: relative; width: 100%; padding-top: 56.25%; }
+.player     { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.modalBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #0c1221;
+  color: #9fb0d0;
+}
+.closeBtn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 800px) {
+  .detail { flex-direction: column; }
+  .posterCol { max-width: 320px; }
+}
