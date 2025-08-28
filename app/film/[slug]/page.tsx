@@ -17,14 +17,13 @@ export default function FilmPage({ params }: Props) {
 
   return (
     <main className="detailPage">
-      {/* HERO: immagine intera + scuritura leggera + blur progressivo verso il basso */}
-      <section className="bgWrap" aria-hidden>
+      {/* HERO: immagine intera, leggermente scura, blur verso il basso */}
+      <div className="bgWrap" aria-hidden>
         <img className="bgImgFull" src={bg} alt="" />
         <div className="bgDarken" />
         <div className="bgBlurFade" />
-      </section>
+      </div>
 
-      {/* CONTENUTO */}
       <div className="container">
         <a href="/" className="backLink">← Torna al catalogo</a>
 

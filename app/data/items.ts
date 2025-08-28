@@ -35,7 +35,7 @@ export const ITEMS: Item[] = [
     plot:
       "Di ritorno a Monaco, il gruppo si trova di fronte a una misteriosa porta che li trascina in un’avventura sospesa tra amicizia, conflitti e segreti nascosti.",
     poster: "/kraillinger_cover.png",
-    background: "/backgrounds/blitzkrieg_bg.png",
+    background: "/backgrounds/kraillinger_bg.png",
     src: "https://drive.google.com/file/d/12KiT79uKGjxI2ZLWT_tEjMAyEChCTmmk/preview",
     trailerSrc: "https://drive.google.com/file/d/1IamEck3YqpUIy9vdRoxhkKIO1SWkDHth/preview",
   },
@@ -48,7 +48,7 @@ export const ITEMS: Item[] = [
     plot:
       "Tra canzoni improvvisate, incontri assurdi e fiumi di alcol, i ragazzi continuano il loro viaggio sempre più lontano da Monaco, senza sapere cosa li aspetta.",
     poster: "/holzkirchen_cover.png",
-    background: "/backgrounds/blitzkrieg_bg.png",
+    background: "/backgrounds/holzkirchen_bg.png",
     src: "https://drive.google.com/file/d/122LDc1fw3BrRwrzf1N2snzSPRBZ84O5k/preview",
     trailerSrc: "https://drive.google.com/file/d/1x_ll7oJL-FUSXTEZkPvCXBWohAqI4byl/preview",
   },

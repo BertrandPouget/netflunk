@@ -16,7 +16,6 @@ export default function Page() {
               <div className="thumb poster">
                 <img src={v.poster} alt={`${v.title} — poster`} loading="lazy" />
               </div>
-              <div className="cardTitle">{v.title}</div>
             </Link>
           ))}
         </section>
