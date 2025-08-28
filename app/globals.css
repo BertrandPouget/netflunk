@@ -2,19 +2,13 @@
     VARIABILI (tuning rapido) 
     ========================= */ 
 :root { 
-  /* Quanto alta può diventare la sezione hero (limite max), senza “zoommare” l’immagine */ 
   --hero-max-height: 90vh; 
-
-  /* Scuritura leggera dell’immagine per migliorare la leggibilità (0 = nulla, 1 = nero pieno) */ 
-  --darken-strength: 0.6; 
-
-  /* Intensità del blur (px) e dove inizia/finisce la dissolvenza */ 
+  --darken-strength: 0.8;  /* scuritura immagine di sfondo */
   --blur-amount: 18px; 
-  --blur-start: 45%;   /* da qui inizia ad apparire il blur */ 
-  --blur-end: 100%;    /* al fondo è massimo */ 
-
-  /* Colore di sfondo pagina */ 
+  --blur-start: 45%; 
+  --blur-end: 100%; 
   --page-bg: #0b0f17; 
+  --detail-offset: clamp(120px, 16vh, 220px); /* offset SOLO per pagina dettaglio */
 } 
 
 /* ========================= 
@@ -43,7 +37,7 @@ a { text-decoration: none; color: inherit; }
 /* ========================= 
     LOGO HOME 
     ========================= */ 
-.logoWrap { display: flex; justify-content: center; margin: 20px 0 30px; } 
+.logoWrap { display: flex; justify-content: center; margin: 20px 0 30px;} 
 .logo { max-width: 320px; margin-top: 40px; } 
 
 /* ========================= 
@@ -51,9 +45,12 @@ a { text-decoration: none; color: inherit; }
     ========================= */ 
 .grid { 
   display: grid; 
-  grid-template-columns: repeat(5, 1fr); 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* poster grandi e a capo se serve */
   gap: 30px; 
-  justify-items: center; 
+  justify-content: center; /* centro l’intera griglia */
+  justify-items: center;   /* centro le card nelle colonne */
+  margin-top: 60px;
+  /* nessun margin-top: il logo sopra fa già spazio */
 } 
 .card { 
   display: block; 
@@ -69,10 +66,6 @@ a { text-decoration: none; color: inherit; }
 .thumb img { width: 100%; display: block; object-fit: cover; aspect-ratio: 2/3; } 
 .cardTitle { padding: 10px; text-align: center; font-weight: 600; font-size: .95rem; } 
 
-/* responsive grid */ 
-@media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } } 
-@media (max-width: 600px)  { .grid { grid-template-columns: repeat(2, 1fr); } } 
-
 /* ========================= 
     PAGINA DETTAGLIO + HERO 
     ========================= */ 
@@ -83,63 +76,62 @@ a { text-decoration: none; color: inherit; }
   background: var(--page-bg); 
 } 
 
-.bgWrap { 
+.bgWrap{ 
   position: fixed; 
   inset: 0; 
   z-index: 0; 
   overflow: hidden; 
 } 
 
-/* Stile per l'immagine di sfondo: larghezza piena, altezza proporzionata */ 
-.bgImgFull { 
+.bgImgFull{ 
   position: absolute; 
-  top: 0; 
-  left: 0; 
+  inset: 0; 
   width: 100%; 
-  height: auto; 
+  height: 100%; 
+  object-fit: cover; 
+  object-position: center top; 
 } 
 
-/* velo scuro */ 
-.bgDarken {
-  pointer-events: none;
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,var(--darken-strength)); /* ← usa la variabile */
-  z-index: 1;
-}
+.bgDarken{ 
+  pointer-events: none; 
+  position: absolute; inset: 0; 
+  z-index: 1; 
+  background: 
+    radial-gradient(120% 80% at 50% 20%, 
+      rgba(0,0,0,0) 0%, 
+      rgba(0,0,0, calc(var(--darken-strength)*0.35)) 65%, 
+      rgba(0,0,0, calc(var(--darken-strength)*0.75)) 100% 
+    ), 
+    linear-gradient(to bottom, 
+      rgba(11,15,23,0) 0%, 
+      rgba(11,15,23, calc(var(--darken-strength)*0.25)) 30%, 
+      rgba(11,15,23, calc(var(--darken-strength)*0.55)) 60%, 
+      rgba(11,15,23,1) 100% 
+    ); 
+} 
 
-/* blur progressivo in basso */ 
-.bgBlurFade { 
+.bgBlurFade{ 
   pointer-events: none; 
   position: absolute; inset: 0; 
   z-index: 2; 
 
-  backdrop-filter: blur(18px); 
-  -webkit-backdrop-filter: blur(18px); 
+  backdrop-filter: blur(var(--blur-amount)); 
+  -webkit-backdrop-filter: blur(var(--blur-amount)); 
 
   mask-image: linear-gradient( 
     to bottom, 
-    rgba(255,255,255,0) 0%, 
-    rgba(255,255,255,0) 50%, 
-    rgba(255,255,255,1) 100% 
+    rgba(0,0,0,0) 0%, 
+    rgba(0,0,0,0) var(--blur-start), 
+    rgba(0,0,0,1) var(--blur-end) 
   ); 
   -webkit-mask-image: linear-gradient( 
     to bottom, 
-    rgba(255,255,255,0) 0%, 
-    rgba(255,255,255,0) 50%, 
-    rgba(255,255,255,1) 100% 
+    rgba(0,0,0,0) 0%, 
+    rgba(0,0,0,0) var(--blur-start), 
+    rgba(0,0,0,1) var(--blur-end) 
   ); 
-
-.bgBlurFade {
-  /* ...backdrop-filter e mask come già hai... */
-  background: linear-gradient(
-    to bottom,
-    rgba(11,15,23,0) 0%,
-    rgba(11,15,23,calc(var(--darken-strength) * 1.2)) 100%
-  );
-}
 } 
 
-/* contenuto sopra */ 
 .detailPage .container { position: relative; z-index: 3; } 
 
 .backLink { 
@@ -153,6 +145,7 @@ a { text-decoration: none; color: inherit; }
   display: flex; 
   gap: 2rem; 
   align-items: flex-start; 
+  margin-top: var(--detail-offset); /* offset solo qui */
   padding: 24px 0 40px 0; 
 } 
 
@@ -168,7 +161,7 @@ a { text-decoration: none; color: inherit; }
 .filmTitle { font-size: 2rem; margin-bottom: .25rem; } 
 .meta      { font-size: .95rem; opacity: .85; margin-bottom: .75rem; } 
 .tagline   { font-style: italic; font-size: 1.05rem; margin: 0 0 .75rem 0; opacity: 0.9; } 
-.plot      { margin: 0 0 1.5rem 0; line-height: 1.55; font-size: 1rem; max-width: 65%; text-align: justify; }
+.plot      { margin: 0 0 1.5rem 0; line-height: 1.55; font-size: 1rem; max-width: 65%; text-align: justify; } 
 
 /* ========================= 
     BOTTONI 
@@ -232,7 +225,18 @@ a { text-decoration: none; color: inherit; }
 /* ========================= 
     RESPONSIVE 
     ========================= */ 
+@media (max-width: 1000px) { 
+  .grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+}
 @media (max-width: 800px) { 
-  .detail { flex-direction: column; } 
+  .detail { 
+    flex-direction: column; 
+    margin-top: clamp(60px, 10vh, 120px); /* offset ridotto su mobile */ 
+  } 
+  .grid { 
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+    justify-content: center; 
+    justify-items: center; 
+  }
   .posterCol { max-width: 320px; } 
 }
