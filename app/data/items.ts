@@ -22,7 +22,7 @@ export const ITEMS: Item[] = [
     plot:
       "Un gruppo di studenti scopre Monaco per la prima volta, tra imprevisti esilaranti e legami che segneranno l’inizio di un viaggio leggendario.",
     poster: "../covers/flunkgasse_cover.png",
-    background: ".../backgrounds/flunkgasse_bg.png",
+    background: "../backgrounds/flunkgasse_bg.png",
     src: "https://drive.google.com/file/d/1cmj7oeBG4D8V9-9dwbCkJFDACPbXfrwk/preview",
     trailerSrc: "https://drive.google.com/file/d/1R2JPARhrdk8itj1Zfw2coqehH-kT0baL/preview",
   },
